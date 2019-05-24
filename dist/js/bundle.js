@@ -86,14 +86,76 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/ModalWindow.js":
+/*!****************************!*\
+  !*** ./src/ModalWindow.js ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+class ModalWindow {
+    constructor(modalElement, overlay, triggers, closers) {
+        this.modalElement = modalElement;
+        this.overlay = overlay;
+        this.triggers = triggers;
+        this.closers = closers;
+
+        this.initModal();
+    }
+
+    initModal() {
+        this.triggers.forEach((item) => item.addEventListener('click', (event) => {
+            this.modalShow();
+        }));
+
+        this.closers.forEach((item) => item.addEventListener('click', (event) => {
+            this.modalHide();
+        }));
+
+        this.overlay.addEventListener('click', (event) => {
+            if (event.target === this.overlay) {
+                this.modalHide();
+            }
+        });
+    }
+
+    modalShow() {
+        this.modalElement.style.display = 'block';
+        this.overlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    modalHide() {
+        this.modalElement.style.display = 'none';
+        this.overlay.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+
+module.exports = ModalWindow;
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
+let ModalWindow = __webpack_require__(/*! ./ModalWindow.js */ "./src/ModalWindow.js")
+;
+let modal = new ModalWindow(
+    document.querySelector('.popup-dialog'),
+    document.querySelector('.popup-design'),
+    document.querySelectorAll('.button-order'),
+    [
+        document.querySelector('.popup-design .popup-close'),
+    ]
+);
 
 /***/ })
 

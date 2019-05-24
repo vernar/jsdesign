@@ -1,0 +1,6 @@
+.more-splash {
+    -webkit-animation-name: splash;
+    animation-name: splash;
+    -webkit-animation-duration: 1.7s;
+    animation-duration: 1.7s;
+}
