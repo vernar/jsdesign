@@ -61,6 +61,35 @@ document.addEventListener("DOMContentLoaded", () => {
             element.style.display = state;
         }
     }
+
+    //9. Images on hover
+    let imagesContainer = document.querySelector('.sizes-wrapper'),
+        imageContainer = imagesContainer.querySelectorAll('.sizes-block'),
+        images = imagesContainer.querySelectorAll('img');
+
+    function shoveImage(item) {
+        let image = item.querySelector('img'),
+            index = image.src.match(/-[\d]/)[0],
+            other = item.querySelectorAll('p');
+        image.src = `img/sizes${index}-1.png`;
+        other.forEach((item) => item.style.display = item.classList.contains('sizes-hit') ? 'block' : 'none');
+    }
+
+    function hideImage(item) {
+        let image = item.querySelector('img'),
+            index = image.src.match(/-[\d]/)[0],
+            other = item.querySelectorAll('p');
+        image.src = `img/sizes${index}.png`;
+        other.forEach((item) => item.style.display = 'block');
+    }
+
+    imageContainer.forEach((item) => {
+        item.addEventListener('mouseover', () => shoveImage(item));
+        item.addEventListener('mouseleave', () => hideImage(item));
+        item.addEventListener('touchstart', () => shoveImage(item));
+        item.addEventListener('touchleave', () => hideImage(item));
+    });
+
     
     //8. Filter Elements
     let filterElements = new FilterElements(
