@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let ModalWindow = require('./ModalWindow.js'),
         AjaxRequest = require('./AjaxSend.js'),
         PhoneTemplate = require('./PhoneTemplate.js'),
-        Calculator = require('./Calculator.js');
+        Calculator = require('./Calculator.js'),
+        FilterElements = require('./FilterElements.js');
 
     //2. Modal popups
     let modalCheckout = new ModalWindow(
@@ -60,6 +61,12 @@ document.addEventListener("DOMContentLoaded", () => {
             element.style.display = state;
         }
     }
+    
+    //8. Filter Elements
+    let filterElements = new FilterElements(
+        document.querySelector('.portfolio-menu'),
+        document.querySelector('.portfolio-wrapper')
+    );
 
     //7. Calculator
     let calculatorSection = document.querySelector('.calc');
