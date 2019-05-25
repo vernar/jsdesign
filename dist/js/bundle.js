@@ -129,6 +129,117 @@ module.exports = AjaxSend;
 
 /***/ }),
 
+/***/ "./src/Calculator.js":
+/*!***************************!*\
+  !*** ./src/Calculator.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+class Calculator {
+    constructor(selectorObjects, buttonCalculate, outputField, startText) {
+        this.selectorObjects = selectorObjects;
+        this.buttonCalculate = buttonCalculate;
+        this.outputField = outputField;
+        this.startText = startText;
+        this.totalPrice = '';
+        this.totalBonus = {};
+
+        this._initCalculator();
+    }
+
+    addBonusCode(inputElement, code, bonusValue, isPercent = false) {
+        inputElement.addEventListener('input', (event) => {
+            if (event.target.value.replace(/\s/g, '') === code) {
+                this.totalBonus[code] = {
+                    bonusValue: bonusValue,
+                    isPercent: isPercent
+                };
+                this._calculate();
+            }
+        });
+    }
+
+    getCurrentBonus() {
+        let bonusInPercent = 0,
+            bonusInValue = 0,
+            bonusTotal = 0;
+        for(let key in this.totalBonus){
+            if (this.totalBonus.hasOwnProperty(key)) {
+                let item = this.totalBonus[key];
+                if (item.isPercent === true) {
+                    bonusInPercent += +item.bonusValue;
+                } else {
+                    bonusInValue += +item.bonusValue;
+                }
+            }
+        }
+        bonusInPercent = bonusInPercent > 100 ? 100 : bonusInPercent;
+        bonusTotal = (this.totalPrice / 100 * bonusInPercent) + bonusInValue;
+        return bonusTotal;
+    }
+
+    _calculate() {
+        this.totalPrice = 0;
+        let isPassed = true;
+
+        this.selectorObjects.forEach((item) => {
+            let element = item.element;
+
+            if (item.isRequire === true &&
+                (typeof element.options[element.selectedIndex].value === undefined ||
+                +element.options[element.selectedIndex].value === 0 ||
+                element.options[element.selectedIndex].value === '')
+            ){
+                element.setCustomValidity(item.errorMessage);
+                isPassed = false;
+            } else {
+                element.setCustomValidity('');
+                this.totalPrice += +element.options[element.selectedIndex].value;
+            }
+        });
+
+        if (isPassed === true) {
+            let discountText = this.getCurrentBonus() > 0 ? ' Ваша скидка: ' + this.getCurrentBonus() : '';
+            this.outputField.innerHTML = (this.totalPrice - this.getCurrentBonus()) + discountText;
+        } else {
+            this.outputField.innerHTML = this.startText;
+        }
+    }
+
+    _initCalculator() {
+        this.outputField.innerHTML = this.startText;
+        this.selectorObjects.forEach((item) => {
+            if (item.element.tagName === 'SELECT') {
+                for (let numb = 0; numb <  item.priceScope.length; numb++) {
+                    item.element.options[numb].value = item.priceScope[numb];
+                }
+            }
+            if (item.isTrigger === true) {
+                let eventType = item.element.tagName === 'SELECT' ? 'change' : 'input';
+                item.element.addEventListener(eventType, (event) => {
+                    this._calculate();
+                    if (event.target.tagName === 'INPUT') {
+                        event.target.value = event.target.value.replace(/^0|[^\d]/g, '');
+                    }
+                });
+            }
+
+            if (this.buttonCalculate !== null) {
+                this.buttonCalculate.addEventListener('click', (event) => {
+                    this._calculate();
+                });
+            }
+        });
+    }
+}
+module.exports = Calculator;
+
+/***/ }),
+
 /***/ "./src/ModalWindow.js":
 /*!****************************!*\
   !*** ./src/ModalWindow.js ***!
@@ -303,11 +414,13 @@ module.exports = PhoneTemplate;
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    //Modal popups
+    //1. Modules require
     let ModalWindow = __webpack_require__(/*! ./ModalWindow.js */ "./src/ModalWindow.js"),
         AjaxRequest = __webpack_require__(/*! ./AjaxSend.js */ "./src/AjaxSend.js"),
-        PhoneTemplate = __webpack_require__(/*! ./PhoneTemplate.js */ "./src/PhoneTemplate.js");
+        PhoneTemplate = __webpack_require__(/*! ./PhoneTemplate.js */ "./src/PhoneTemplate.js"),
+        Calculator = __webpack_require__(/*! ./Calculator.js */ "./src/Calculator.js");
 
+    //2. Modal popups
     let modalCheckout = new ModalWindow(
             document.querySelector('.popup-design .popup-dialog'),
             document.querySelector('.popup-design'),
@@ -331,6 +444,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         );
 
+    // initial variables
     let ajax = new AjaxRequest();
 
     let messages = {
@@ -358,6 +472,47 @@ document.addEventListener("DOMContentLoaded", () => {
             element.style.display = state;
         }
     }
+
+    //7. Calculator
+    let calculatorSection = document.querySelector('.calc');
+    let calculatorObject  = [
+        {
+            element: calculatorSection.querySelector('#size'),
+            priceScope: [0, 1000, 1500, 2000, 2500],
+            isTrigger: true,
+            isRequire: true,
+            errorMessage: 'Не выбран размер',
+        },
+        {
+            element: calculatorSection.querySelector('#material'),
+            priceScope: [0, 1000, 2000, 3000],
+            isTrigger: true,
+            isRequire: true,
+            errorMessage: 'Не выбран материал',
+        },
+        {
+            element: calculatorSection.querySelector('#options'),
+            priceScope: [0, 1000, 3000, 3000],
+            isTrigger: true,
+            isRequire: false,
+        },
+    ];
+
+    let calculator = new Calculator(
+        calculatorObject,
+        calculatorSection.querySelector('.button-order'),
+        calculatorSection.querySelector('.calc-price'),
+        'Для расчета нужно выбрать размер картины и материал картины'
+    );
+    calculator.addBonusCode(
+        calculatorSection.querySelector('.promocode'),
+        'IWANTPOPART',
+        30,
+        true
+    );
+    calculatorSection.querySelector('form').addEventListener('submit', (event) => {event.preventDefault();});
+
+
     //6. Show more stiles
     let moreStilesButton = document.querySelector('.button-styles'),
         hidenBlocks = document.querySelectorAll('.styles .hidden-lg'),
