@@ -57,8 +57,19 @@ document.addEventListener("DOMContentLoaded", () => {
             element.style.display = state;
         }
     }
+    //6. Show more stiles
+    let moreStilesButton = document.querySelector('.button-styles'),
+        hidenBlocks = document.querySelectorAll('.styles .hidden-lg'),
+        classToShow = 'col-sm-3 col-sm-offset-0 col-xs-10 col-xs-offset-1';
+    moreStilesButton.addEventListener('click', () => {
+        hidenBlocks.forEach((element) => {
+            element.className = classToShow;
+        });
+        moreStilesButton.style.display = 'none';
+    });
 
-    //gift
+
+    //5.gift
     let giftIcon = document.querySelector('.fixed-gift');
     setTimeout(() => {
         giftIcon.style.display = 'block';
@@ -67,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
         giftIcon.style.display = 'none';
     });
 
-    //ajax submit for checkout modal window
+    //4.ajax submit for checkout modal window
     (() => {
         //create message div block
         let messageContainer = document.createElement('div'),
@@ -146,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })();
 
 
-    //ajax submit for consultation modal window
+    //4. ajax submit for consultation modal window
     (() => {
         //create message div block
         let messageContainer = document.createElement('div'),
