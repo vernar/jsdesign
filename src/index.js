@@ -20,7 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll('.button-consultation'),
             [
                 document.querySelector('.popup-consultation .popup-close'),
-            ]);
+            ]),
+        modalGift = new ModalWindow     (
+            document.querySelector('.popup-gift .popup-dialog'),
+            document.querySelector('.popup-gift'),
+            document.querySelectorAll('.fixed-gift'),
+            [
+                document.querySelector('.popup-gift .popup-close')
+            ]
+        );
 
     let ajax = new AjaxRequest();
 
@@ -49,6 +57,15 @@ document.addEventListener("DOMContentLoaded", () => {
             element.style.display = state;
         }
     }
+
+    //gift
+    let giftIcon = document.querySelector('.fixed-gift');
+    setTimeout(() => {
+        giftIcon.style.display = 'block';
+    },3000);
+    giftIcon.addEventListener('click', () => {
+        giftIcon.style.display = 'none';
+    });
 
     //ajax submit for checkout modal window
     (() => {
@@ -168,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         function resetForm() {
-            modalCheckout.modalHide();
+            modalConsultation.modalHide();
             consultationForm.querySelectorAll('input').forEach((item) => {item.value = ''; });
             messageContainer.style.display = 'none';
             consultationForm.style.display = 'block';
