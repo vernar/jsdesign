@@ -1125,7 +1125,7 @@ h4 {
   padding: 4rem 6rem 5rem 6rem;
 }
 .popup-design {
-  z-index: 20;
+  z-index: 9999999;
   position: fixed;
   display: none;
   top: 0;
