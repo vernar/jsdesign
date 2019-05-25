@@ -4,3 +4,31 @@
     -webkit-animation-duration: 1.7s;
     animation-duration: 1.7s;
 }
+
+.popup-message-content {
+    height: 150px;
+    width: 230px;
+}
+.popup-message-text{
+    margin: 15%;
+    font-weight: bold;
+    font-size: 20px;
+}
+.popup-message-image{
+    background-size: 100%;
+    background-repeat: no-repeat;
+    height: 90px;
+    margin-left: 30%;
+    margin-right: 30%;
+}
+.popup-message-content .success {
+    background-image: url(/img/success.svg);
+}
+
+.popup-message-content .error {
+    background-image: url(/img/error.svg);
+}
+
+.popup-message-content .process {
+    background-image: url(/img/loading.gif);
+}
