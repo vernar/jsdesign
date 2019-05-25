@@ -240,6 +240,54 @@ module.exports = Calculator;
 
 /***/ }),
 
+/***/ "./src/FilterElements.js":
+/*!*******************************!*\
+  !*** ./src/FilterElements.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+class FilterElements {
+    constructor(ButtonContainer, elementsContainer, activeButtonClass = 'active') {
+        this.buttonContainer = ButtonContainer;
+        this.elementsContainer = elementsContainer;
+        this.activeButtonClass = activeButtonClass;
+
+        this._init();
+    }
+
+    _init() {
+        this.buttonContainer.addEventListener('click', (event) => {
+            Array.from(this.buttonContainer.children).forEach((element) => {
+                if (element === event.target){
+                    element.classList.add(this.activeButtonClass);
+                } else {
+                    element.classList.remove(this.activeButtonClass);
+                }
+            });
+            let isNoFoundAny = true;
+            event.target.classList.forEach((className) => {
+                Array.from(this.elementsContainer.children).forEach((element) => {
+                    if (className === this.activeButtonClass) {
+                        return;
+                    }
+
+                    if(element.classList.contains(className)) {
+                        element.style.display = 'block';
+                        isNoFoundAny = false;
+                    } else {
+                        element.style.display = 'none';
+                    }
+                });
+            });
+            document.querySelector('.portfolio-no').style.display = isNoFoundAny === true ? 'block' : 'none';
+        });
+    }
+}
+module.exports = FilterElements;
+
+/***/ }),
+
 /***/ "./src/ModalWindow.js":
 /*!****************************!*\
   !*** ./src/ModalWindow.js ***!
@@ -418,7 +466,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let ModalWindow = __webpack_require__(/*! ./ModalWindow.js */ "./src/ModalWindow.js"),
         AjaxRequest = __webpack_require__(/*! ./AjaxSend.js */ "./src/AjaxSend.js"),
         PhoneTemplate = __webpack_require__(/*! ./PhoneTemplate.js */ "./src/PhoneTemplate.js"),
-        Calculator = __webpack_require__(/*! ./Calculator.js */ "./src/Calculator.js");
+        Calculator = __webpack_require__(/*! ./Calculator.js */ "./src/Calculator.js"),
+        FilterElements = __webpack_require__(/*! ./FilterElements.js */ "./src/FilterElements.js");
 
     //2. Modal popups
     let modalCheckout = new ModalWindow(
@@ -472,6 +521,12 @@ document.addEventListener("DOMContentLoaded", () => {
             element.style.display = state;
         }
     }
+    
+    //8. Filter Elements
+    let filterElements = new FilterElements(
+        document.querySelector('.portfolio-menu'),
+        document.querySelector('.portfolio-wrapper')
+    );
 
     //7. Calculator
     let calculatorSection = document.querySelector('.calc');
