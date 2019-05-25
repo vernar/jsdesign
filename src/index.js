@@ -2,11 +2,13 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    //Modal popups
+    //1. Modules require
     let ModalWindow = require('./ModalWindow.js'),
         AjaxRequest = require('./AjaxSend.js'),
-        PhoneTemplate = require('./PhoneTemplate.js');
+        PhoneTemplate = require('./PhoneTemplate.js'),
+        Calculator = require('./Calculator.js');
 
+    //2. Modal popups
     let modalCheckout = new ModalWindow(
             document.querySelector('.popup-design .popup-dialog'),
             document.querySelector('.popup-design'),
@@ -30,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         );
 
+    // initial variables
     let ajax = new AjaxRequest();
 
     let messages = {
@@ -57,6 +60,47 @@ document.addEventListener("DOMContentLoaded", () => {
             element.style.display = state;
         }
     }
+
+    //7. Calculator
+    let calculatorSection = document.querySelector('.calc');
+    let calculatorObject  = [
+        {
+            element: calculatorSection.querySelector('#size'),
+            priceScope: [0, 1000, 1500, 2000, 2500],
+            isTrigger: true,
+            isRequire: true,
+            errorMessage: 'Не выбран размер',
+        },
+        {
+            element: calculatorSection.querySelector('#material'),
+            priceScope: [0, 1000, 2000, 3000],
+            isTrigger: true,
+            isRequire: true,
+            errorMessage: 'Не выбран материал',
+        },
+        {
+            element: calculatorSection.querySelector('#options'),
+            priceScope: [0, 1000, 3000, 3000],
+            isTrigger: true,
+            isRequire: false,
+        },
+    ];
+
+    let calculator = new Calculator(
+        calculatorObject,
+        calculatorSection.querySelector('.button-order'),
+        calculatorSection.querySelector('.calc-price'),
+        'Для расчета нужно выбрать размер картины и материал картины'
+    );
+    calculator.addBonusCode(
+        calculatorSection.querySelector('.promocode'),
+        'IWANTPOPART',
+        30,
+        true
+    );
+    calculatorSection.querySelector('form').addEventListener('submit', (event) => {event.preventDefault();});
+
+
     //6. Show more stiles
     let moreStilesButton = document.querySelector('.button-styles'),
         hidenBlocks = document.querySelectorAll('.styles .hidden-lg'),
