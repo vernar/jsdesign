@@ -180,7 +180,11 @@ document.addEventListener("DOMContentLoaded", () => {
         sliders: document.querySelectorAll('.feedback-slider-item'),
         prev: document.querySelector('.main-prev-btn'),
         next: document.querySelector('.main-next-btn'),
-        slideInterval: 5000
+        slideInterval: 5000,
+        fromLeftClass: 'fadeInLeftBig',
+        fromRightClass: 'fadeInRightBig',
+        toLeftClass: 'fadeOutLeftBig',
+        toRightClass: 'fadeOutRightBig',
     });
 
     //9. Images on hover

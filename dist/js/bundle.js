@@ -676,6 +676,7 @@ class Slider {
 
         this.startIndex = 0;
         this.currentIndex = 0;
+        this.pauseByTimeOut = false;
 
         this.initSlider(this.startIndex);
     }
@@ -714,6 +715,12 @@ class Slider {
         this.currentIndex = nextIndex;
     }
 
+    _intervalTrigger(){
+        if (this.pauseByTimeOut === false) {
+            this.nextSlide();
+        }
+    }
+
     initSlider(startIndex = 0) {
         this.slides.forEach((item) => item.style.display = 'none');
 
@@ -722,17 +729,17 @@ class Slider {
         setTimeout(() => this.slides[startIndex].classList.remove(this.fromRightClass), this.animationTimeout);
         this.currentIndex = startIndex;
 
-        let autoSlide = setInterval(() => this.nextSlide(), this.slideInterval);
+        setInterval(() => this._intervalTrigger() , this.slideInterval);
 
         this.next.addEventListener('click', () => {
             this.nextSlide();
-            clearInterval(autoSlide);
-            setTimeout(() => autoSlide = setInterval(() => this.nextSlide(), this.slideInterval), 10000 );
+            this.pauseByTimeOut = true;
+            setTimeout(() => this.pauseByTimeOut = false, 10000 );
         });
         this.prev.addEventListener('click', () => {
             this.prevSlide();
-            clearInterval(autoSlide);
-            setTimeout(() => autoSlide = setInterval(() => this.nextSlide(), this.slideInterval), 10000 );
+            this.pauseByTimeOut = true;
+            setTimeout(() => this.pauseByTimeOut = false, 10000 );
         });
     }
 }
@@ -1075,7 +1082,11 @@ document.addEventListener("DOMContentLoaded", () => {
         sliders: document.querySelectorAll('.feedback-slider-item'),
         prev: document.querySelector('.main-prev-btn'),
         next: document.querySelector('.main-next-btn'),
-        slideInterval: 5000
+        slideInterval: 5000,
+        fromLeftClass: 'fadeInLeftBig',
+        fromRightClass: 'fadeInRightBig',
+        toLeftClass: 'fadeOutLeftBig',
+        toRightClass: 'fadeOutRightBig',
     });
 
     //9. Images on hover
