@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
         PhoneTemplate = require('./PhoneTemplate.js'),
         Calculator = require('./Calculator.js'),
         FilterElements = require('./FilterElements.js'),
-        Slider = require('./Slider.js');
+        Slider = require('./Slider.js'),
+        Accordion = require('./Accordion.js');
 
     // initial variables
     let ajax = new AjaxRequest();
@@ -54,6 +55,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.querySelector('.popup-gift .popup-close')
             ]
         );
+    
+    //11. Accordion
+    let accordion = new Accordion(
+        document.querySelector('#accordion'),
+        document.querySelectorAll('#accordion .accordion-heading'),
+        document.querySelectorAll('#accordion div')
+    );
 
     //10. bottom Slider
     let slider = new Slider({
