@@ -37,6 +37,10 @@
 .feedback .feedback-slider-item {
     position: absolute;
 }
+.feedback-slider {
+    overflow: hidden;
+}
+
 
 /*=================================*/
 .fadeInLeftBig {

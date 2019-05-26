@@ -84,12 +84,12 @@ class Slider {
         this.next.addEventListener('click', () => {
             this.nextSlide();
             clearInterval(autoSlide);
-            setInterval(() => autoSlide = setInterval(() => this.nextSlide(), this.slideInterval), 10000 );
+            setTimeout(() => autoSlide = setInterval(() => this.nextSlide(), this.slideInterval), 10000 );
         });
         this.prev.addEventListener('click', () => {
             this.prevSlide();
             clearInterval(autoSlide);
-            setInterval(() => autoSlide = setInterval(() => this.nextSlide(), this.slideInterval), 10000 );
+            setTimeout(() => autoSlide = setInterval(() => this.nextSlide(), this.slideInterval), 10000 );
         });
     }
 }
