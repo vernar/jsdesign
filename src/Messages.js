@@ -26,7 +26,7 @@ class Messages {
         messageImage.id = 'popup-message-image';
         messageContainer.appendChild(messageImage);
         messageContainer.appendChild(messageText);
-        messageContainer.setAttribute('display', 'none');
+        messageContainer.style.display = 'none';
 
         this.messageContainer = messageContainer;
         this.messageText = messageText;

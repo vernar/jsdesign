@@ -434,7 +434,7 @@ class Messages {
         messageImage.id = 'popup-message-image';
         messageContainer.appendChild(messageImage);
         messageContainer.appendChild(messageText);
-        messageContainer.setAttribute('display', 'none');
+        messageContainer.style.display = 'none';
 
         this.messageContainer = messageContainer;
         this.messageText = messageText;
@@ -932,8 +932,71 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.querySelector('.popup-gift .popup-close')
             ]
         );
-    //12 main form
 
+    //12 main form
+    (() => {
+        //create message div block
+        let messageObject = new Messages(),
+            messageContainer = messageObject.getMessageContainer();
+
+        let mainContainer = document.querySelector('.consultation .container'),
+            mainForm = document.querySelector('.consultation form'),
+            mainSubmitButton = mainForm.querySelector('.button-order'),
+            checkoutInputPhone = mainForm.querySelector('input[name=phone]');
+
+        let phoneMainForm = new PhoneTemplate(checkoutInputPhone, '+375 (__) ___-__-__', 6);
+        messageContainer.style.marginLeft = '35%';
+        mainContainer.appendChild(messageContainer);
+
+        //phone validation
+        mainSubmitButton.addEventListener('mouseover', (event) => {
+            if (phoneMainForm.isValid() !== true) {
+                checkoutInputPhone.focus();
+                checkoutInputPhone.setCustomValidity(messages.invalidPhone.text);
+            } else {
+                checkoutInputPhone.setCustomValidity('');
+            }
+        });
+        mainSubmitButton.addEventListener('mouseleave', (event) => {
+            checkoutInputPhone.setCustomValidity('');
+        });
+
+        //text validation
+        mainForm.querySelector('input[name=name]').addEventListener('input',(event)=> {
+            event.target.value = event.target.value.replace(/[^а-я]/gi,'');
+        });
+        mainForm.querySelector('input[name=message]').addEventListener('input',(event)=> {
+            event.target.value = event.target.value.replace(/[^а-я]/gi,'');
+        });
+        mainForm.querySelector('input[name=email]').setAttribute('type', 'email');
+
+        function resetForm() {
+            mainForm.querySelectorAll('input').forEach((item) => {item.value = ''; });
+            messageContainer.style.display = 'none';
+            mainForm.style.display = 'block';
+            phoneMainForm.clearField();
+        }
+
+        //ajax send
+        mainForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            messageObject.setMessageToProcess();
+            messageContainer.style.display = 'block';
+            mainForm.style.display = 'none';
+
+            ajax.ajaxSendResponce(mainForm,'POST', 'server.php')
+                .then(
+                    responce =>  {
+                        messageObject.setMessageToSuccess();
+                        setTimeout(() => resetForm(), 5000);
+                    },error =>  {
+                        messageObject.setMessageToError();
+                        setTimeout(() => resetForm(), 5000);
+                    }
+                );
+        });
+    })();
     
     //11. Accordion
     let accordion = new Accordion(
