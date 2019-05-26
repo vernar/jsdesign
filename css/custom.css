@@ -210,11 +210,13 @@
   from {
     opacity: 0;
     transform: translate3d(0, -100%, 0);
+      z-index: 1000;
   }
 
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
+      z-index: 0;
   }
 }
 
@@ -245,4 +247,13 @@
 }
 .ui-accordion-header-active {
     cursor: pointer!important;
+}
+
+/*main slider*/
+.main-slider {
+height: 690px;
+}
+.main-slider-item {
+float: left;
+position: absolute;
 }

@@ -45,6 +45,16 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         );
 
+    //16. main Slider
+
+    let mainSlider = new Slider({
+        sliderContainer: document.querySelector('.main-slider'),
+        sliders: document.querySelectorAll('.main-slider-item'),
+        slideInterval: 5000,
+        fromRightClass: 'fadeInDown',
+        animationTimeout: 900,
+    });
+
     //15. hamburger menu
     let hamburgerMenu = document.querySelector('.burger-menu'),
         hamburgerButton = document.querySelector('.burger');

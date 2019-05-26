@@ -667,10 +667,10 @@ class Slider {
         this.prev = sliderElements.prev;
         this.next = sliderElements.next;
         this.dotsWrap = sliderElements.dotsWrap;
-        this.fromLeftClass = typeof sliderElements.fromLeftClass === "undefined" ? 'fadeInLeftBig' : sliderElements.fromLeftClass;
-        this.fromRightClass = typeof sliderElements.fromRightClass === "undefined" ? 'fadeInRightBig' : sliderElements.fromRightClass;
-        this.toLeftClass = typeof sliderElements.toLeftClass === "undefined" ? 'fadeOutLeftBig' : sliderElements.toLeftClass;
-        this.toRightClass = typeof sliderElements.toRightClass === "undefined" ? 'fadeOutRightBig' : sliderElements.toRightClass;
+        this.fromLeftClass = typeof sliderElements.fromLeftClass === "undefined" ? 'empty' : sliderElements.fromLeftClass;
+        this.fromRightClass = typeof sliderElements.fromRightClass === "undefined" ? 'empty' : sliderElements.fromRightClass;
+        this.toLeftClass = typeof sliderElements.toLeftClass === "undefined" ? 'empty' : sliderElements.toLeftClass;
+        this.toRightClass = typeof sliderElements.toRightClass === "undefined" ? 'empty' : sliderElements.toRightClass;
         this.animationTimeout = typeof sliderElements.animationTimeout === "undefined" ? 1000 : sliderElements.animationTimeout;
         this.slideInterval = typeof sliderElements.slideInterval === "undefined" ? 10000 : sliderElements.slideInterval;
 
@@ -731,16 +731,21 @@ class Slider {
 
         setInterval(() => this._intervalTrigger() , this.slideInterval);
 
-        this.next.addEventListener('click', () => {
-            this.nextSlide();
-            this.pauseByTimeOut = true;
-            setTimeout(() => this.pauseByTimeOut = false, 10000 );
-        });
-        this.prev.addEventListener('click', () => {
-            this.prevSlide();
-            this.pauseByTimeOut = true;
-            setTimeout(() => this.pauseByTimeOut = false, 10000 );
-        });
+        if (typeof this.next !== "undefined"){
+            this.next.addEventListener('click', () => {
+                this.nextSlide();
+                this.pauseByTimeOut = true;
+                setTimeout(() => this.pauseByTimeOut = false, 10000 );
+            });
+        }
+
+        if (typeof this.prev !== "undefined"){
+            this.prev.addEventListener('click', () => {
+                this.prevSlide();
+                this.pauseByTimeOut = true;
+                setTimeout(() => this.pauseByTimeOut = false, 10000 );
+            });
+        }
     }
 }
 module.exports = Slider;
@@ -946,6 +951,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.querySelector('.popup-gift .popup-close')
             ]
         );
+
+    //16. main Slider
+
+    let mainSlider = new Slider({
+        sliderContainer: document.querySelector('.main-slider'),
+        sliders: document.querySelectorAll('.main-slider-item'),
+        slideInterval: 5000,
+        fromRightClass: 'fadeInDown',
+        animationTimeout: 900,
+    });
 
     //15. hamburger menu
     let hamburgerMenu = document.querySelector('.burger-menu'),
