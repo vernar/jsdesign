@@ -24,15 +24,16 @@ class Slider {
         this.prev = sliderElements.prev;
         this.next = sliderElements.next;
         this.dotsWrap = sliderElements.dotsWrap;
-        this.fromLeftClass = typeof sliderElements.fromLeftClass === "undefined" ? 'fadeInLeftBig' : sliderElements.fromLeftClass;
-        this.fromRightClass = typeof sliderElements.fromRightClass === "undefined" ? 'fadeInRightBig' : sliderElements.fromRightClass;
-        this.toLeftClass = typeof sliderElements.toLeftClass === "undefined" ? 'fadeOutLeftBig' : sliderElements.toLeftClass;
-        this.toRightClass = typeof sliderElements.toRightClass === "undefined" ? 'fadeOutRightBig' : sliderElements.toRightClass;
+        this.fromLeftClass = typeof sliderElements.fromLeftClass === "undefined" ? 'empty' : sliderElements.fromLeftClass;
+        this.fromRightClass = typeof sliderElements.fromRightClass === "undefined" ? 'empty' : sliderElements.fromRightClass;
+        this.toLeftClass = typeof sliderElements.toLeftClass === "undefined" ? 'empty' : sliderElements.toLeftClass;
+        this.toRightClass = typeof sliderElements.toRightClass === "undefined" ? 'empty' : sliderElements.toRightClass;
         this.animationTimeout = typeof sliderElements.animationTimeout === "undefined" ? 1000 : sliderElements.animationTimeout;
         this.slideInterval = typeof sliderElements.slideInterval === "undefined" ? 10000 : sliderElements.slideInterval;
 
         this.startIndex = 0;
         this.currentIndex = 0;
+        this.pauseByTimeOut = false;
 
         this.initSlider(this.startIndex);
     }
@@ -71,6 +72,12 @@ class Slider {
         this.currentIndex = nextIndex;
     }
 
+    _intervalTrigger(){
+        if (this.pauseByTimeOut === false) {
+            this.nextSlide();
+        }
+    }
+
     initSlider(startIndex = 0) {
         this.slides.forEach((item) => item.style.display = 'none');
 
@@ -79,18 +86,23 @@ class Slider {
         setTimeout(() => this.slides[startIndex].classList.remove(this.fromRightClass), this.animationTimeout);
         this.currentIndex = startIndex;
 
-        let autoSlide = setInterval(() => this.nextSlide(), this.slideInterval);
+        setInterval(() => this._intervalTrigger() , this.slideInterval);
 
-        this.next.addEventListener('click', () => {
-            this.nextSlide();
-            clearInterval(autoSlide);
-            setTimeout(() => autoSlide = setInterval(() => this.nextSlide(), this.slideInterval), 10000 );
-        });
-        this.prev.addEventListener('click', () => {
-            this.prevSlide();
-            clearInterval(autoSlide);
-            setTimeout(() => autoSlide = setInterval(() => this.nextSlide(), this.slideInterval), 10000 );
-        });
+        if (typeof this.next !== "undefined"){
+            this.next.addEventListener('click', () => {
+                this.nextSlide();
+                this.pauseByTimeOut = true;
+                setTimeout(() => this.pauseByTimeOut = false, 10000 );
+            });
+        }
+
+        if (typeof this.prev !== "undefined"){
+            this.prev.addEventListener('click', () => {
+                this.prevSlide();
+                this.pauseByTimeOut = true;
+                setTimeout(() => this.pauseByTimeOut = false, 10000 );
+            });
+        }
     }
 }
 module.exports = Slider;

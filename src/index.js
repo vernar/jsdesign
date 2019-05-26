@@ -45,6 +45,16 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         );
 
+    //16. main Slider
+
+    let mainSlider = new Slider({
+        sliderContainer: document.querySelector('.main-slider'),
+        sliders: document.querySelectorAll('.main-slider-item'),
+        slideInterval: 5000,
+        fromRightClass: 'fadeInDown',
+        animationTimeout: 900,
+    });
+
     //15. hamburger menu
     let hamburgerMenu = document.querySelector('.burger-menu'),
         hamburgerButton = document.querySelector('.burger');
@@ -180,7 +190,11 @@ document.addEventListener("DOMContentLoaded", () => {
         sliders: document.querySelectorAll('.feedback-slider-item'),
         prev: document.querySelector('.main-prev-btn'),
         next: document.querySelector('.main-next-btn'),
-        slideInterval: 5000
+        slideInterval: 5000,
+        fromLeftClass: 'fadeInLeftBig',
+        fromRightClass: 'fadeInRightBig',
+        toLeftClass: 'fadeOutLeftBig',
+        toRightClass: 'fadeOutRightBig',
     });
 
     //9. Images on hover
