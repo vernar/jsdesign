@@ -7,7 +7,29 @@ document.addEventListener("DOMContentLoaded", () => {
         AjaxRequest = require('./AjaxSend.js'),
         PhoneTemplate = require('./PhoneTemplate.js'),
         Calculator = require('./Calculator.js'),
-        FilterElements = require('./FilterElements.js');
+        FilterElements = require('./FilterElements.js'),
+        Slider = require('./Slider.js');
+
+    // initial variables
+    let ajax = new AjaxRequest();
+
+    let messages = {
+        ajaxSuccess: {
+            text: 'Собщение отправлено',
+            class: 'success',
+        },
+        ajaxProcess: {
+            text: 'Отправка',
+            class: 'process',
+        },
+        ajaxError: {
+            text: 'Ошибка',
+            class: 'error',
+        },
+        invalidPhone: {
+            text: 'Заполните поле телефона'
+        }
+    };
 
     //2. Modal popups
     let modalCheckout = new ModalWindow(
@@ -33,39 +55,18 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         );
 
-    // initial variables
-    let ajax = new AjaxRequest();
-
-    let messages = {
-        ajaxSuccess: {
-            text: 'Собщение отправлено',
-            class: 'success',
-        },
-        ajaxProcess: {
-            text: 'Отправка',
-            class: 'process',
-        },
-        ajaxError: {
-            text: 'Ошибка',
-            class: 'error',
-        },
-        invalidPhone: {
-            text: 'Заполните поле телефона'
-        }
-    };
-
-    function toggle(element, state = '') {
-        if (state === '') {
-            element.style.display = element.style.display === "none" ? 'block' : 'none';
-        } else {
-            element.style.display = state;
-        }
-    }
+    //10. bottom Slider
+    let slider = new Slider({
+        sliderContainer: document.querySelector('.feedback-slider'),
+        sliders: document.querySelectorAll('.feedback-slider-item'),
+        prev: document.querySelector('.main-prev-btn'),
+        next: document.querySelector('.main-next-btn'),
+        slideInterval: 5000
+    });
 
     //9. Images on hover
     let imagesContainer = document.querySelector('.sizes-wrapper'),
-        imageContainer = imagesContainer.querySelectorAll('.sizes-block'),
-        images = imagesContainer.querySelectorAll('img');
+        imageContainer = imagesContainer.querySelectorAll('.sizes-block');
 
     function shoveImage(item) {
         let image = item.querySelector('img'),
