@@ -9,24 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
         Calculator = require('./Calculator.js'),
         FilterElements = require('./FilterElements.js'),
         Slider = require('./Slider.js'),
-        Accordion = require('./Accordion.js');
+        Accordion = require('./Accordion.js'),
+        Messages = require('./Messages.js');
 
     // initial variables
     let ajax = new AjaxRequest();
 
     let messages = {
-        ajaxSuccess: {
-            text: 'Собщение отправлено',
-            class: 'success',
-        },
-        ajaxProcess: {
-            text: 'Отправка',
-            class: 'process',
-        },
-        ajaxError: {
-            text: 'Ошибка',
-            class: 'error',
-        },
         invalidPhone: {
             text: 'Заполните поле телефона'
         }
@@ -55,6 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.querySelector('.popup-gift .popup-close')
             ]
         );
+    //12 main form
+
     
     //11. Accordion
     let accordion = new Accordion(
@@ -170,16 +161,8 @@ document.addEventListener("DOMContentLoaded", () => {
     //4.ajax submit for checkout modal window
     (() => {
         //create message div block
-        let messageContainer = document.createElement('div'),
-            messageText = document.createElement('div'),
-            messageImage = document.createElement('div');
-        messageContainer.className = 'popup-message-content';
-        messageText.className = 'popup-message-text';
-        messageImage.className = 'popup-message-image';
-        messageContainer.appendChild(messageImage);
-        messageContainer.appendChild(messageText);
-        messageContainer.setAttribute('display', 'none');
-
+        let messageObject = new Messages(),
+            messageContainer = messageObject.getMessageContainer();
 
         let checkoutWindow = document.querySelector('.popup-design .popup-content'),
             checkoutForm = checkoutWindow.querySelector('.popup-dialog form'),
@@ -223,22 +206,17 @@ document.addEventListener("DOMContentLoaded", () => {
         checkoutForm.addEventListener('submit', (event) => {
             event.preventDefault();
 
-            messageImage.classList.add(messages.ajaxProcess.class);
-            messageText.innerHTML = messages.ajaxProcess.text;
+            messageObject.setMessageToProcess();
             messageContainer.style.display = 'block';
             checkoutForm.style.display = 'none';
 
             ajax.ajaxSendResponce(checkoutForm,'POST', 'server.php')
                 .then(
                     responce =>  {
-                        messageImage.classList.remove(messages.ajaxProcess.class);
-                        messageImage.classList.add(messages.ajaxSuccess.class);
-                        messageText.innerHTML = messages.ajaxSuccess.text;
+                        messageObject.setMessageToSuccess();
                         setTimeout(() => resetForm(), 5000);
                     },error =>  {
-                        messageImage.classList.remove(messages.ajaxProcess.class);
-                        messageImage.classList.add(messages.ajaxError.class);
-                        messageText.innerHTML = messages.ajaxError.text;
+                        messageObject.setMessageToError();
                         setTimeout(() => resetForm(), 5000);
                     }
                 );
@@ -249,15 +227,8 @@ document.addEventListener("DOMContentLoaded", () => {
     //4. ajax submit for consultation modal window
     (() => {
         //create message div block
-        let messageContainer = document.createElement('div'),
-            messageText = document.createElement('div'),
-            messageImage = document.createElement('div');
-        messageContainer.className = 'popup-message-content';
-        messageText.className = 'popup-message-text';
-        messageImage.className = 'popup-message-image';
-        messageContainer.appendChild(messageImage);
-        messageContainer.appendChild(messageText);
-        messageContainer.setAttribute('display', 'none');
+        let messageObject = new Messages(),
+            messageContainer = messageObject.getMessageContainer();
 
         let consultationWindow = document.querySelector('.popup-consultation .popup-content'),
             consultationForm = consultationWindow.querySelector('.popup-dialog form'),
@@ -296,22 +267,17 @@ document.addEventListener("DOMContentLoaded", () => {
         consultationForm.addEventListener('submit', (event) => {
             event.preventDefault();
 
-            messageImage.classList.add(messages.ajaxProcess.class);
-            messageText.innerHTML = messages.ajaxProcess.text;
+            messageObject.setMessageToProcess();
             messageContainer.style.display = 'block';
             consultationForm.style.display = 'none';
 
             ajax.ajaxSendResponce(consultationForm,'POST', 'server.php')
                 .then(
                     responce =>  {
-                        messageImage.classList.remove(messages.ajaxProcess.class);
-                        messageImage.classList.add(messages.ajaxSuccess.class);
-                        messageText.innerHTML = messages.ajaxSuccess.text;
+                        messageObject.setMessageToSuccess();
                         setTimeout(() => resetForm(), 5000);
                     },error =>  {
-                        messageImage.classList.remove(messages.ajaxProcess.class);
-                        messageImage.classList.add(messages.ajaxError.class);
-                        messageText.innerHTML = messages.ajaxError.text;
+                        messageObject.setMessageToError();
                         setTimeout(() => resetForm(), 5000);
                     }
                 );
