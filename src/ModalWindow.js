@@ -35,6 +35,13 @@ class ModalWindow {
         this.overlay.style.display = 'none';
         document.body.style.overflow = '';
     }
+
+    isOpen() {
+        if (this.overlay.style.display === 'block') {
+            return true;
+        }
+        return false;
+    }
 }
 
 module.exports = ModalWindow;

@@ -45,6 +45,13 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         );
 
+    //14. 60 seconds to modal
+    setTimeout(() =>{
+        if (! (modalCheckout.isOpen() || modalConsultation.isOpen() || modalGift.isOpen())) {
+            modalConsultation.modalShow();
+        }
+    }, 60000);
+
     //5.gift
     //13. show modal window if list to bottom page
     let allButtons = document.querySelectorAll('button'),

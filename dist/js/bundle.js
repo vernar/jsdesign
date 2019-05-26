@@ -508,6 +508,13 @@ class ModalWindow {
         this.overlay.style.display = 'none';
         document.body.style.overflow = '';
     }
+
+    isOpen() {
+        if (this.overlay.style.display === 'block') {
+            return true;
+        }
+        return false;
+    }
 }
 
 module.exports = ModalWindow;
@@ -932,6 +939,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.querySelector('.popup-gift .popup-close')
             ]
         );
+
+    //14. 60 seconds to modal
+    setTimeout(() =>{
+        if (! (modalCheckout.isOpen() || modalConsultation.isOpen() || modalGift.isOpen())) {
+            modalConsultation.modalShow();
+        }
+    }, 60000);
 
     //5.gift
     //13. show modal window if list to bottom page
