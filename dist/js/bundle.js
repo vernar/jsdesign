@@ -933,6 +933,35 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         );
 
+    //5.gift
+    //13. show modal window if list to bottom page
+    let allButtons = document.querySelectorAll('button'),
+        isClickAnyButton = false,
+        isShowGift = false,
+        giftIcon = document.querySelector('.fixed-gift');
+
+    let giftTimer = setTimeout(() => {
+        giftIcon.style.display = 'block';
+    },3000);
+    giftIcon.addEventListener('click', () => {
+        giftIcon.style.display = 'none';
+    });
+
+    allButtons.forEach((button) => button.addEventListener('click',() => {
+        isClickAnyButton = true;
+    }));
+
+    window.addEventListener('scroll', () => {
+        let documentHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight - 100,
+            currentScroll  = document.documentElement.scrollTop;
+        if (currentScroll >= documentHeight && isShowGift === false && isClickAnyButton === false) {
+            clearTimeout(giftTimer);
+            giftIcon.style.display = 'none';
+            modalGift.modalShow();
+            isShowGift = true;
+        }
+    });
+
     //12 main form
     (() => {
         //create message div block
@@ -1097,16 +1126,6 @@ document.addEventListener("DOMContentLoaded", () => {
             element.className = classToShow;
         });
         moreStilesButton.style.display = 'none';
-    });
-
-
-    //5.gift
-    let giftIcon = document.querySelector('.fixed-gift');
-    setTimeout(() => {
-        giftIcon.style.display = 'block';
-    },3000);
-    giftIcon.addEventListener('click', () => {
-        giftIcon.style.display = 'none';
     });
 
     //4.ajax submit for checkout modal window
