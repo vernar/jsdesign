@@ -940,6 +940,27 @@ document.addEventListener("DOMContentLoaded", () => {
             ]
         );
 
+    //15. hamburger menu
+    let hamburgerMenu = document.querySelector('.burger-menu'),
+        hamburgerButton = document.querySelector('.burger');
+
+    function isTablet() {
+        if(document.documentElement.clientWidth  <= 768) {
+            return true;
+        }
+        return false;
+    }
+    window.addEventListener('resize', () => {
+        if (isTablet() === true) {
+            hamburgerMenu.style.display = 'none';
+        }
+    });
+    hamburgerButton.addEventListener('click', () => {
+        if (isTablet() === true) {
+            hamburgerMenu.style.display = hamburgerMenu.style.display === 'none' ? 'block' : 'none';
+        }
+    });
+
     //14. 60 seconds to modal
     setTimeout(() =>{
         if (! (modalCheckout.isOpen() || modalConsultation.isOpen() || modalGift.isOpen())) {
