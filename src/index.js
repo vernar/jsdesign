@@ -142,10 +142,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         //text validation
         mainForm.querySelector('input[name=name]').addEventListener('input',(event)=> {
-            event.target.value = event.target.value.replace(/[^а-я]/gi,'');
+            event.target.value = event.target.value.replace(/[^а-яё]/gi,'');
         });
         mainForm.querySelector('input[name=message]').addEventListener('input',(event)=> {
-            event.target.value = event.target.value.replace(/[^а-я]/gi,'');
+            event.target.value = event.target.value.replace(/[^а-яё]/gi,'');
         });
         mainForm.querySelector('input[name=email]').setAttribute('type', 'email');
 
@@ -311,10 +311,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         //text validation
         checkoutWindow.querySelector('input[name=name]').addEventListener('input',(event)=> {
-            event.target.value = event.target.value.replace(/[^а-я]/gi,'');
+            event.target.value = event.target.value.replace(/[^а-яё]/gi,'');
         });
         checkoutWindow.querySelector('textarea[name=message]').addEventListener('input',(event)=> {
-            event.target.value = event.target.value.replace(/[^а-я]/gi,'');
+            event.target.value = event.target.value.replace(/[^а-яё]/gi,'');
         });
         checkoutWindow.querySelector('input[name=email]').setAttribute('type', 'email');
 
@@ -376,7 +376,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         //text validation
         consultationWindow.querySelector('input[name=name]').addEventListener('input',(event)=> {
-            event.target.value = event.target.value.replace(/[^а-я]/gi,'');
+            event.target.value = event.target.value.replace(/[^а-яё]/gi,'');
         });
 
         function resetForm() {
