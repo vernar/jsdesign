@@ -251,13 +251,14 @@ module.exports = AjaxSend;
 
 
 class Calculator {
-    constructor(selectorObjects, buttonCalculate, outputField, startText) {
+    constructor(selectorObjects, buttonCalculate, outputField, startText, canSummBonusAmound = false) {
         this.selectorObjects = selectorObjects;
         this.buttonCalculate = buttonCalculate;
         this.outputField = outputField;
         this.startText = startText;
         this.totalPrice = '';
-        this.totalBonus = {};
+        this.totalBonus = [];
+        this.canSummBonusAmound = canSummBonusAmound;
 
         this._initCalculator();
     }
@@ -269,8 +270,10 @@ class Calculator {
                     bonusValue: bonusValue,
                     isPercent: isPercent
                 };
-                this._calculate();
+            } else if (this.canSummBonusAmound === false) {
+                delete this.totalBonus[code];
             }
+            this._calculate();
         });
     }
 
@@ -278,6 +281,7 @@ class Calculator {
         let bonusInPercent = 0,
             bonusInValue = 0,
             bonusTotal = 0;
+
         for(let key in this.totalBonus){
             if (this.totalBonus.hasOwnProperty(key)) {
                 let item = this.totalBonus[key];
