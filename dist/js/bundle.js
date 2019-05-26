@@ -86,6 +86,117 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/Accordion.js":
+/*!**************************!*\
+  !*** ./src/Accordion.js ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+class Accordion {
+    constructor(parentElement, buttons, notes) {
+        this.parentElement = parentElement;
+        this.buttons = buttons;
+        this.notes = notes;
+        this.fadeInClass = 'fadeInDown';
+        this.fadeOutClass = 'fadeOutUp';
+
+        this.buttonActiveClass = 'ui-accordion-header-active';
+
+        this.resetElements();
+        this._init();
+    }
+    resetElements(exceptionElementNumber) {
+        this.buttons.forEach((element) => {
+            if (typeof exceptionElementNumber !== "undefined" && element === this.buttons[exceptionElementNumber]) {
+                return;
+            }
+            element.classList.remove(this.buttonActiveClass);
+        });
+
+        this.notes.forEach((element) => {
+            if (typeof exceptionElementNumber !== "undefined" && element === this.notes[exceptionElementNumber]) {
+                return;
+            }
+            element.classList.remove(this.fadeInClass);
+            element.classList.remove(this.fadeOutClass);
+            element.classList.add(this.fadeOutClass);
+            setTimeout(() => {
+                element.style.display = 'none';
+                element.classList.remove(this.fadeOutClass);
+            }, 600);
+        });
+    }
+
+    _init() {
+        this.notes.forEach((element) => element.style.display = 'none');
+        this.buttons.forEach((element, number) => {
+            element.addEventListener('click', (event) => {
+                this.resetElements(number);
+                if (this.buttons[number].classList.contains(this.buttonActiveClass)) {
+                    this.buttons[number].classList.remove(this.buttonActiveClass);
+                    this.notes[number].classList.remove(this.fadeInClass);
+                    this.notes[number].classList.remove(this.fadeOutClass);
+                    this.notes[number].classList.add(this.fadeOutClass);
+                    setTimeout(() => {
+                        this.notes[number].style.display = 'none';
+                        this.notes[number].classList.remove(this.fadeOutClass);
+                    }, 400);
+                } else {
+                    this.buttons[number].classList.add(this.buttonActiveClass);
+                    this.notes[number].style.display = 'block';
+                    this.notes[number].classList.remove(this.fadeInClass);
+                    this.notes[number].classList.add(this.fadeInClass);
+                }
+            });
+        });
+    }
+}
+module.exports = Accordion;
+
+
+/*
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fadeInDown {
+    animation-name: fadeInDown;
+    -webkit-animation-duration: 1.0s;
+    animation-duration: 1.0s;
+    -webkit-animation-duration: 1.0s;
+}
+
+
+@keyframes fadeOutUp {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+.fadeOutUp {
+    animation-name: fadeOutUp;
+    -webkit-animation-duration: 1.0s;
+    animation-duration: 1.0s;
+    -webkit-animation-duration: 1.0s;
+}
+ */
+
+/***/ }),
+
 /***/ "./src/AjaxSend.js":
 /*!*************************!*\
   !*** ./src/AjaxSend.js ***!
@@ -720,7 +831,8 @@ document.addEventListener("DOMContentLoaded", () => {
         PhoneTemplate = __webpack_require__(/*! ./PhoneTemplate.js */ "./src/PhoneTemplate.js"),
         Calculator = __webpack_require__(/*! ./Calculator.js */ "./src/Calculator.js"),
         FilterElements = __webpack_require__(/*! ./FilterElements.js */ "./src/FilterElements.js"),
-        Slider = __webpack_require__(/*! ./Slider.js */ "./src/Slider.js");
+        Slider = __webpack_require__(/*! ./Slider.js */ "./src/Slider.js"),
+        Accordion = __webpack_require__(/*! ./Accordion.js */ "./src/Accordion.js");
 
     // initial variables
     let ajax = new AjaxRequest();
@@ -766,6 +878,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.querySelector('.popup-gift .popup-close')
             ]
         );
+    
+    //11. Accordion
+    let accordion = new Accordion(
+        document.querySelector('#accordion'),
+        document.querySelectorAll('#accordion .accordion-heading'),
+        document.querySelectorAll('#accordion div')
+    );
 
     //10. bottom Slider
     let slider = new Slider({
