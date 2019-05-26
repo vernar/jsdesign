@@ -1228,6 +1228,7 @@ document.addEventListener("DOMContentLoaded", () => {
         function resetForm() {
             modalCheckout.modalHide();
             checkoutForm.querySelectorAll('input').forEach((item) => {item.value = ''; });
+            checkoutWindow.querySelector('textarea[name=message]').value = '';
             messageContainer.style.display = 'none';
             checkoutForm.style.display = 'block';
             phoneCheckout.clearField();
