@@ -399,6 +399,71 @@ module.exports = FilterElements;
 
 /***/ }),
 
+/***/ "./src/Messages.js":
+/*!*************************!*\
+  !*** ./src/Messages.js ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+class Messages {
+    constructor(){
+        this.messages = {
+            ajaxSuccess: {
+                text: 'Собщение отправлено',
+                class: 'success',
+            },
+            ajaxProcess: {
+                text: 'Отправка',
+                class: 'process',
+            },
+            ajaxError: {
+                text: 'Ошибка',
+                class: 'error',
+            },
+        };
+
+        this._init();
+    }
+    _init() {
+        let messageContainer = document.createElement('div'),
+            messageText = document.createElement('div'),
+            messageImage = document.createElement('div');
+        messageContainer.className = 'popup-message-content';
+        messageText.id = 'popup-message-text';
+        messageImage.id = 'popup-message-image';
+        messageContainer.appendChild(messageImage);
+        messageContainer.appendChild(messageText);
+        messageContainer.style.display = 'none';
+
+        this.messageContainer = messageContainer;
+        this.messageText = messageText;
+        this.messageImage = messageImage;
+    }
+
+    getMessageContainer() {
+        return this.messageContainer;
+    }
+
+    setMessageToProcess() {
+        this.messageImage.className = this.messages.ajaxProcess.class;
+        this.messageText.innerHTML = this.messages.ajaxProcess.text;
+    }
+
+    setMessageToSuccess() {
+        this.messageImage.className = this.messages.ajaxSuccess.class;
+        this.messageText.innerHTML = this.messages.ajaxSuccess.text;
+    }
+
+    setMessageToError() {
+        this.messageImage.className = this.messages.ajaxError.class;
+        this.messageText.innerHTML = this.messages.ajaxError.text;
+    }
+}
+module.exports = Messages;
+
+/***/ }),
+
 /***/ "./src/ModalWindow.js":
 /*!****************************!*\
   !*** ./src/ModalWindow.js ***!
@@ -832,24 +897,13 @@ document.addEventListener("DOMContentLoaded", () => {
         Calculator = __webpack_require__(/*! ./Calculator.js */ "./src/Calculator.js"),
         FilterElements = __webpack_require__(/*! ./FilterElements.js */ "./src/FilterElements.js"),
         Slider = __webpack_require__(/*! ./Slider.js */ "./src/Slider.js"),
-        Accordion = __webpack_require__(/*! ./Accordion.js */ "./src/Accordion.js");
+        Accordion = __webpack_require__(/*! ./Accordion.js */ "./src/Accordion.js"),
+        Messages = __webpack_require__(/*! ./Messages.js */ "./src/Messages.js");
 
     // initial variables
     let ajax = new AjaxRequest();
 
     let messages = {
-        ajaxSuccess: {
-            text: 'Собщение отправлено',
-            class: 'success',
-        },
-        ajaxProcess: {
-            text: 'Отправка',
-            class: 'process',
-        },
-        ajaxError: {
-            text: 'Ошибка',
-            class: 'error',
-        },
         invalidPhone: {
             text: 'Заполните поле телефона'
         }
@@ -878,6 +932,71 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.querySelector('.popup-gift .popup-close')
             ]
         );
+
+    //12 main form
+    (() => {
+        //create message div block
+        let messageObject = new Messages(),
+            messageContainer = messageObject.getMessageContainer();
+
+        let mainContainer = document.querySelector('.consultation .container'),
+            mainForm = document.querySelector('.consultation form'),
+            mainSubmitButton = mainForm.querySelector('.button-order'),
+            checkoutInputPhone = mainForm.querySelector('input[name=phone]');
+
+        let phoneMainForm = new PhoneTemplate(checkoutInputPhone, '+375 (__) ___-__-__', 6);
+        messageContainer.style.marginLeft = '35%';
+        mainContainer.appendChild(messageContainer);
+
+        //phone validation
+        mainSubmitButton.addEventListener('mouseover', (event) => {
+            if (phoneMainForm.isValid() !== true) {
+                checkoutInputPhone.focus();
+                checkoutInputPhone.setCustomValidity(messages.invalidPhone.text);
+            } else {
+                checkoutInputPhone.setCustomValidity('');
+            }
+        });
+        mainSubmitButton.addEventListener('mouseleave', (event) => {
+            checkoutInputPhone.setCustomValidity('');
+        });
+
+        //text validation
+        mainForm.querySelector('input[name=name]').addEventListener('input',(event)=> {
+            event.target.value = event.target.value.replace(/[^а-я]/gi,'');
+        });
+        mainForm.querySelector('input[name=message]').addEventListener('input',(event)=> {
+            event.target.value = event.target.value.replace(/[^а-я]/gi,'');
+        });
+        mainForm.querySelector('input[name=email]').setAttribute('type', 'email');
+
+        function resetForm() {
+            mainForm.querySelectorAll('input').forEach((item) => {item.value = ''; });
+            messageContainer.style.display = 'none';
+            mainForm.style.display = 'block';
+            phoneMainForm.clearField();
+        }
+
+        //ajax send
+        mainForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            messageObject.setMessageToProcess();
+            messageContainer.style.display = 'block';
+            mainForm.style.display = 'none';
+
+            ajax.ajaxSendResponce(mainForm,'POST', 'server.php')
+                .then(
+                    responce =>  {
+                        messageObject.setMessageToSuccess();
+                        setTimeout(() => resetForm(), 5000);
+                    },error =>  {
+                        messageObject.setMessageToError();
+                        setTimeout(() => resetForm(), 5000);
+                    }
+                );
+        });
+    })();
     
     //11. Accordion
     let accordion = new Accordion(
@@ -993,16 +1112,8 @@ document.addEventListener("DOMContentLoaded", () => {
     //4.ajax submit for checkout modal window
     (() => {
         //create message div block
-        let messageContainer = document.createElement('div'),
-            messageText = document.createElement('div'),
-            messageImage = document.createElement('div');
-        messageContainer.className = 'popup-message-content';
-        messageText.className = 'popup-message-text';
-        messageImage.className = 'popup-message-image';
-        messageContainer.appendChild(messageImage);
-        messageContainer.appendChild(messageText);
-        messageContainer.setAttribute('display', 'none');
-
+        let messageObject = new Messages(),
+            messageContainer = messageObject.getMessageContainer();
 
         let checkoutWindow = document.querySelector('.popup-design .popup-content'),
             checkoutForm = checkoutWindow.querySelector('.popup-dialog form'),
@@ -1046,22 +1157,17 @@ document.addEventListener("DOMContentLoaded", () => {
         checkoutForm.addEventListener('submit', (event) => {
             event.preventDefault();
 
-            messageImage.classList.add(messages.ajaxProcess.class);
-            messageText.innerHTML = messages.ajaxProcess.text;
+            messageObject.setMessageToProcess();
             messageContainer.style.display = 'block';
             checkoutForm.style.display = 'none';
 
             ajax.ajaxSendResponce(checkoutForm,'POST', 'server.php')
                 .then(
                     responce =>  {
-                        messageImage.classList.remove(messages.ajaxProcess.class);
-                        messageImage.classList.add(messages.ajaxSuccess.class);
-                        messageText.innerHTML = messages.ajaxSuccess.text;
+                        messageObject.setMessageToSuccess();
                         setTimeout(() => resetForm(), 5000);
                     },error =>  {
-                        messageImage.classList.remove(messages.ajaxProcess.class);
-                        messageImage.classList.add(messages.ajaxError.class);
-                        messageText.innerHTML = messages.ajaxError.text;
+                        messageObject.setMessageToError();
                         setTimeout(() => resetForm(), 5000);
                     }
                 );
@@ -1072,15 +1178,8 @@ document.addEventListener("DOMContentLoaded", () => {
     //4. ajax submit for consultation modal window
     (() => {
         //create message div block
-        let messageContainer = document.createElement('div'),
-            messageText = document.createElement('div'),
-            messageImage = document.createElement('div');
-        messageContainer.className = 'popup-message-content';
-        messageText.className = 'popup-message-text';
-        messageImage.className = 'popup-message-image';
-        messageContainer.appendChild(messageImage);
-        messageContainer.appendChild(messageText);
-        messageContainer.setAttribute('display', 'none');
+        let messageObject = new Messages(),
+            messageContainer = messageObject.getMessageContainer();
 
         let consultationWindow = document.querySelector('.popup-consultation .popup-content'),
             consultationForm = consultationWindow.querySelector('.popup-dialog form'),
@@ -1119,22 +1218,17 @@ document.addEventListener("DOMContentLoaded", () => {
         consultationForm.addEventListener('submit', (event) => {
             event.preventDefault();
 
-            messageImage.classList.add(messages.ajaxProcess.class);
-            messageText.innerHTML = messages.ajaxProcess.text;
+            messageObject.setMessageToProcess();
             messageContainer.style.display = 'block';
             consultationForm.style.display = 'none';
 
             ajax.ajaxSendResponce(consultationForm,'POST', 'server.php')
                 .then(
                     responce =>  {
-                        messageImage.classList.remove(messages.ajaxProcess.class);
-                        messageImage.classList.add(messages.ajaxSuccess.class);
-                        messageText.innerHTML = messages.ajaxSuccess.text;
+                        messageObject.setMessageToSuccess();
                         setTimeout(() => resetForm(), 5000);
                     },error =>  {
-                        messageImage.classList.remove(messages.ajaxProcess.class);
-                        messageImage.classList.add(messages.ajaxError.class);
-                        messageText.innerHTML = messages.ajaxError.text;
+                        messageObject.setMessageToError();
                         setTimeout(() => resetForm(), 5000);
                     }
                 );
