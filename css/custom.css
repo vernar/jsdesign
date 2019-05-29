@@ -210,13 +210,13 @@
   from {
     opacity: 0;
     transform: translate3d(0, -100%, 0);
-      z-index: 1000;
+      /*z-index: 1000;*/
   }
 
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
-      z-index: 0;
+      /*z-index: 0;*/
   }
 }
 
@@ -256,4 +256,22 @@ height: 690px;
 .main-slider-item {
 float: left;
 position: absolute;
+}
+
+@keyframes fadeOutDown {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+        transform: translate3d(0, 100%, 0);
+    }
+}
+
+.fadeOutDown {
+    animation-name: fadeOutDown;
+    -webkit-animation-duration: 1.0s;
+    animation-duration: 1.0s;
+    -webkit-animation-duration: 1.0s;
 }

@@ -963,6 +963,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sliders: document.querySelectorAll('.main-slider-item'),
         slideInterval: 5000,
         fromRightClass: 'fadeInDown',
+        toLeftClass: 'fadeOutDown',
         animationTimeout: 900,
     });
 
